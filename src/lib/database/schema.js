@@ -1,11 +1,13 @@
-export const createEmployeesTable = `
-  CREATE TABLE IF NOT EXISTS employees (
+export const createUsersTable = `
+  CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
     join_date DATE NOT NULL,
     department VARCHAR(100),
-    position VARCHAR(100),
+    role VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   )
@@ -19,14 +21,14 @@ export const createLeaveApplicationsTable = `
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     total_days INT NOT NULL,
-    reason TEXT,
+    reason TEXT NOT NULL,
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     approved_by INT,
     approved_at TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (employee_id) REFERENCES employees(id),
-    FOREIGN KEY (approved_by) REFERENCES employees(id)
+    FOREIGN KEY (employee_id) REFERENCES users(id),
+    FOREIGN KEY (approved_by) REFERENCES users(id)
   )
 `;
 
@@ -49,7 +51,7 @@ export const createLeaveBalanceTable = `
     paternity_leave_used INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE,
+    FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE KEY unique_employee_year (employee_id, year)
   )
 `;

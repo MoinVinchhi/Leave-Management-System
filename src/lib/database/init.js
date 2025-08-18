@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise';
-import { GetDBSettings } from '@/sharedCode/common';
+import { GetDBSettings } from '../../sharedCode/common.js';
 import { 
-  createEmployeesTable, 
+  createUsersTable, 
   createLeaveApplicationsTable, 
   createLeaveBalanceTable 
 } from './schema.js';
@@ -10,7 +10,7 @@ export async function initializeDatabase() {
   const connection = await mysql.createConnection(GetDBSettings());
   
   try {
-    await connection.execute(createEmployeesTable);
+    await connection.execute(createUsersTable);
     await connection.execute(createLeaveApplicationsTable);
     await connection.execute(createLeaveBalanceTable);
     console.log('Database tables initialized successfully');
