@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { MoveLeft } from 'lucide-react';
 
 export default function AddUserPage() {
   const [formData, setFormData] = useState({
@@ -98,18 +99,19 @@ export default function AddUserPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 text-black">
       {/* Navigation Bar */}
       <nav className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between h-16">
-            <div className="flex items-center">
+            <div className="flex items-center space-x-4">
               <button
                 onClick={() => router.push('/dashboard')}
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
-                ← Back to Dashboard
+                <MoveLeft className='inline' /> Back to Dashboard
               </button>
+              <h1 className="text-xl font-semibold">Add New User</h1>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-700">
@@ -134,12 +136,12 @@ export default function AddUserPage() {
       {/* Main Content */}
       <div className="max-w-2xl mx-auto py-8 px-4">
         <div className="bg-white shadow-md rounded-lg p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Add New User</h1>
+          <h1 className="text-2xl font-bold text-black mb-6">Add New User</h1>
           
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* First Name */}
             <div>
-              <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="first_name" className="block text-sm font-medium text-black mb-1">
                 First Name *
               </label>
               <input
@@ -158,7 +160,7 @@ export default function AddUserPage() {
 
             {/* Last Name */}
             <div>
-              <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="last_name" className="block text-sm font-medium text-black mb-1">
                 Last Name *
               </label>
               <input
@@ -177,7 +179,7 @@ export default function AddUserPage() {
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-black mb-1">
                 Email Address *
               </label>
               <input
@@ -194,7 +196,7 @@ export default function AddUserPage() {
 
             {/* Join Date */}
             <div>
-              <label htmlFor="join_date" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="join_date" className="block text-sm font-medium text-black mb-1">
                 Join Date *
               </label>
               <input
@@ -210,7 +212,7 @@ export default function AddUserPage() {
 
             {/* Department */}
             <div>
-              <label htmlFor="department" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="department" className="block text-sm font-medium text-black mb-1">
                 Department *
               </label>
               <select
@@ -234,7 +236,7 @@ export default function AddUserPage() {
 
             {/* Role */}
             <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="role" className="block text-sm font-medium text-black mb-1">
                 Role *
               </label>
               <select

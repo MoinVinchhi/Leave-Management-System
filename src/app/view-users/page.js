@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { MoveLeft } from 'lucide-react';
 
 export default function ViewEmployeesPage() {
   const [employees, setEmployees] = useState([]);
@@ -108,13 +109,18 @@ export default function ViewEmployeesPage() {
                 onClick={() => router.push('/dashboard')}
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
-                ← Back to Dashboard
+                <MoveLeft className='inline' /> Back to Dashboard
               </button>
               <h1 className="text-xl font-semibold">All Employees</h1>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-700">
-                Welcome, {user?.firstName} {user?.lastName} ({user?.role})
+                Welcome,
+                <span className='font-bold'> 
+                {" " + user?.first_name?.charAt(0).toUpperCase() + user?.first_name?.slice(1).toLowerCase()} 
+                {user?.last_name?.charAt(0).toUpperCase() + user?.last_name?.slice(1).toLowerCase() + " "} 
+                ({user?.role?.toUpperCase()})
+                </span>
               </span>
               <button
                 onClick={handleLogout}
@@ -133,8 +139,8 @@ export default function ViewEmployeesPage() {
           {/* Header */}
           <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">Employee Directory</h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <h2 className="text-xl font-semibold text-black">Employee Directory</h2>
+              <p className="text-sm text-black mt-1">
                 Total Employees: {employees.length}
               </p>
             </div>
@@ -159,25 +165,25 @@ export default function ViewEmployeesPage() {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                       ID
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                       Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                       Email
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                       Department
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                       Role
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                       Join Date
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -189,15 +195,15 @@ export default function ViewEmployeesPage() {
                         #{employee.id}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-black">
                           {employee.first_name} {employee.last_name}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{employee.email}</div>
+                        <div className="text-sm text-black">{employee.email}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
+                        <div className="text-sm text-black">
                           {employee.department || 'N/A'}
                         </div>
                       </td>

@@ -5,91 +5,47 @@ import { checkUser } from '@/lib/auth/checkUser.js';
 
 const connectionParams = GetDBSettings();
 
-export async function GET(request, { params }) {
+export async function GET(request) {
   const auth = await checkUser(request);
   if (auth.error) {
     return NextResponse.json(auth.error, { status: auth.status });
   }
 
   try {
-    // Check if user is HR
-    if (request?.data?.role !== 'hr') {
-      return NextResponse.json({ 
-        error: 'Forbidden: Only HR can access this resource' 
-      }, { status: 403 });
-    }
-
-    const resolvedParams = await params;
-    const user_id = resolvedParams.id;
-
-    if (!user_id) {
-      return NextResponse.json({ 
-        error: 'User ID is required' 
-      }, { status: 400 });
-    }
+    const user_id = auth.data.id;
+    const currentYear = new Date().getFullYear();
 
     const connection = await mysql.createConnection(connectionParams);
 
-    // Get user basic information
-    const [userResult] = await connection.execute(
-      `SELECT 
-        id, 
-        first_name, 
-        last_name, 
-        email, 
-        join_date, 
-        department, 
-        role,
-        created_at
-      FROM users 
-      WHERE id = ?`,
+    // Check if user exists
+    const [userCheck] = await connection.execute(
+      'SELECT first_name, last_name FROM users WHERE id = ?',
       [user_id]
     );
 
-    if (userResult.length === 0) {
+    if (userCheck.length === 0) {
       await connection.end();
       return NextResponse.json({ 
         error: 'User not found' 
       }, { status: 404 });
     }
 
-    const user = userResult[0];
-    const currentYear = new Date().getFullYear();
-
-    // Get leave applications history
-    const [leaveApplications] = await connection.execute(
-      `SELECT 
-        la.id,
-        la.leave_type,
-        la.start_date,
-        la.end_date,
-        la.total_days,
-        la.reason,
-        la.status,
-        la.created_at as applied_date,
-        la.approved_by,
-        la.approved_at,
-        CONCAT(approver.first_name, ' ', approver.last_name) as approved_by_name
-      FROM leave_applications la
-      LEFT JOIN users approver ON la.approved_by = approver.id
-      WHERE la.user_id = ?
-      ORDER BY la.created_at DESC`,
-      [user_id]
-    );
-
-    // Get or create leave balance for current year
+    // Check if balance record exists for current year
     let [balanceResult] = await connection.execute(
       'SELECT * FROM leave_balance WHERE user_id = ? AND year = ?',
       [user_id, currentYear]
     );
 
-    // If no balance record exists, create one
+    // If no record exists for current year, create one with default values
     if (balanceResult.length === 0) {
       await connection.execute(
-        `INSERT INTO leave_balance (user_id, year) VALUES (?, ?)`,
+        `INSERT INTO leave_balance 
+         (user_id, year) 
+         VALUES (?, ?)`,
         [user_id, currentYear]
       );
 
+      // Fetch the newly created record
       [balanceResult] = await connection.execute(
         'SELECT * FROM leave_balance WHERE user_id = ? AND year = ?',
         [user_id, currentYear]
@@ -98,11 +54,11 @@ export async function GET(request, { params }) {
 
     const balance = balanceResult[0];
 
-    // Calculate used leave days from approved applications for current year
+    // Calculate used leave days from leave_applications table
     const [usedLeaveData] = await connection.execute(
       `SELECT 
         leave_type,
-        SUM(total_days) as days_used
+        SUM(DATEDIFF(end_date, start_date) + 1) as days_used
        FROM leave_applications 
        WHERE user_id = ? 
          AND status = 'approved' 
@@ -149,8 +105,10 @@ export async function GET(request, { params }) {
 
     await connection.end();
 
-    // Format leave balance response
+    // Format response
     const leaveBalance = {
+      user_id: parseInt(user_id),
+      user_name: `${userCheck[0].first_name} ${userCheck[0].last_name}`,
       year: currentYear,
       leave_types: {
         sick_leave: {
@@ -187,30 +145,10 @@ export async function GET(request, { params }) {
       last_updated: updatedBalance.updated_at
     };
 
-    // Calculate summary statistics
-    const totalLeavesTaken = leaveApplications.filter(app => app.status === 'approved').length;
-    const pendingApplications = leaveApplications.filter(app => app.status === 'pending').length;
-    const rejectedApplications = leaveApplications.filter(app => app.status === 'rejected').length;
-
-    return NextResponse.json({
-      user: {
-        ...user,
-        full_name: `${user.first_name} ${user.last_name}`
-      },
-      leave_applications: leaveApplications,
-      leave_balance: leaveBalance,
-      summary: {
-        total_applications: leaveApplications.length,
-        approved_applications: totalLeavesTaken,
-        pending_applications: pendingApplications,
-        rejected_applications: rejectedApplications,
-        total_leave_days_used: Object.values(leaveBalance.leave_types).reduce((sum, leave) => sum + leave.used, 0),
-        total_leave_days_remaining: Object.values(leaveBalance.leave_types).reduce((sum, leave) => sum + leave.remaining, 0)
-      }
-    });
+    return NextResponse.json(leaveBalance);
 
   } catch (err) {
-    console.log("Error: User Leave Details API - " + err.message);
+    console.log("Error: My Leave Balance API - " + err.message);
     return NextResponse.json({ 
       error: err.message 
     }, { status: 500 });

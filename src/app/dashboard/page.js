@@ -45,8 +45,6 @@ export default function Dashboard() {
     }
   };
 
-  console.log(user);
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -65,7 +63,12 @@ export default function Dashboard() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-700">
-                Welcome, {user?.firstName} {user?.lastName} ({user?.role})
+                Welcome,
+                <span className='font-bold'> 
+                {" " + user?.first_name?.charAt(0).toUpperCase() + user?.first_name?.slice(1).toLowerCase()} 
+                {user?.last_name?.charAt(0).toUpperCase() + user?.last_name?.slice(1).toLowerCase() + " "} 
+                ({user?.role?.toUpperCase()})
+                </span>
               </span>
               <button
                 onClick={handleLogout}
@@ -87,7 +90,7 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="bg-white p-6 rounded-lg shadow">
                   <h3 className="text-lg font-medium mb-2">Add Employee</h3>
-                  <p className="text-gray-600 mb-4">Add new employees to the system</p>
+                  <p className="text-black mb-4">Add new employees to the system</p>
                   <button 
                     onClick={() => router.push('/add-user')}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
@@ -98,7 +101,7 @@ export default function Dashboard() {
                 
                 <div className="bg-white p-6 rounded-lg shadow">
                   <h3 className="text-lg font-medium mb-2">View All Users</h3>
-                  <p className="text-gray-600 mb-4">Manage all users and view leave details</p>
+                  <p className="text-black mb-4">Manage all users and view leave details</p>
                   <button 
                     onClick={() => router.push('/view-users')}
                     className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
@@ -109,7 +112,7 @@ export default function Dashboard() {
                 
                 <div className="bg-white p-6 rounded-lg shadow">
                   <h3 className="text-lg font-medium mb-2">Leave Requests</h3>
-                  <p className="text-gray-600 mb-4">Approve/Reject leave requests</p>
+                  <p className="text-black mb-4">Approve/Reject leave requests</p>
                   <button 
                     onClick={() => router.push('/manage-leave-requests')}
                     className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md"
@@ -124,15 +127,18 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white p-6 rounded-lg shadow">
                   <h3 className="text-lg font-medium mb-2">Apply for Leave</h3>
-                  <p className="text-gray-600 mb-4">Submit a new leave request</p>
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
+                  <p className="text-black mb-4">Submit a new leave request</p>
+                  <button 
+                    onClick={() => router.push('/apply-leave')}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                  >
                     Apply Leave
                   </button>
                 </div>
                 
                 <div className="bg-white p-6 rounded-lg shadow">
                   <h3 className="text-lg font-medium mb-2">My Leave Balance</h3>
-                  <p className="text-gray-600 mb-4">Check your leave balance</p>
+                  <p className="text-black mb-4">Check your leave balance</p>
                   <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
                     View Balance
                   </button>

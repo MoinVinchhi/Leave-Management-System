@@ -114,7 +114,12 @@ export default function ViewEmployeesPage() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-700">
-                Welcome, {user?.firstName} {user?.lastName} ({user?.role})
+                Welcome,
+                <span className='font-bold'> 
+                {" " + user?.first_name?.charAt(0).toUpperCase() + user?.first_name?.slice(1).toLowerCase()} 
+                {user?.last_name?.charAt(0).toUpperCase() + user?.last_name?.slice(1).toLowerCase() + " "} 
+                ({user?.role?.toUpperCase()})
+                </span>
               </span>
               <button
                 onClick={handleLogout}

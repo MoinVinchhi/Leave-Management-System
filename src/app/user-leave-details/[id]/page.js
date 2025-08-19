@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { MoveLeft } from 'lucide-react';
 
 export default function UserLeaveDetailsPage() {
   const [userData, setUserData] = useState(null);
@@ -112,7 +113,7 @@ export default function UserLeaveDetailsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 text-black">
       {/* Navigation Bar */}
       <nav className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4">
@@ -122,13 +123,18 @@ export default function UserLeaveDetailsPage() {
                 onClick={() => router.push('/view-users')}
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
-                ← Back to Users
+                <MoveLeft className='inline' /> Back to Users
               </button>
               <h1 className="text-xl font-semibold">Employee Leave Details</h1>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-700">
-                Welcome, {user?.first_name} {user?.last_name} ({user?.role})
+                Welcome,
+                <span className='font-bold'> 
+                {" " + user?.first_name?.charAt(0).toUpperCase() + user?.first_name?.slice(1).toLowerCase()} 
+                {user?.last_name?.charAt(0).toUpperCase() + user?.last_name?.slice(1).toLowerCase() + " "} 
+                ({user?.role?.toUpperCase()})
+                </span>
               </span>
               <button
                 onClick={handleLogout}
