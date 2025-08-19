@@ -4,7 +4,7 @@ export async function GET(request) {
   // this is going to be my JSON response
 
   const results = {
-    message: 'Hello World!',
+    message: 'Hello from Leave Managment System!',
   }
 
   // response with the JSON object

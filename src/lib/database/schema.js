@@ -16,7 +16,7 @@ export const createUsersTable = `
 export const createLeaveApplicationsTable = `
   CREATE TABLE IF NOT EXISTS leave_applications (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    employee_id INT NOT NULL,
+    user_id INT NOT NULL,
     leave_type ENUM('sick', 'vacation', 'personal', 'emergency', 'maternity', 'paternity') NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
@@ -27,7 +27,7 @@ export const createLeaveApplicationsTable = `
     approved_at TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (employee_id) REFERENCES users(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (approved_by) REFERENCES users(id)
   )
 `;
@@ -35,7 +35,7 @@ export const createLeaveApplicationsTable = `
 export const createLeaveBalanceTable = `
   CREATE TABLE IF NOT EXISTS leave_balance (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    employee_id INT NOT NULL,
+    user_id INT NOT NULL,
     year INT NOT NULL,
     sick_leave_total INT DEFAULT 12,
     sick_leave_used INT DEFAULT 0,
@@ -51,7 +51,7 @@ export const createLeaveBalanceTable = `
     paternity_leave_used INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_employee_year (employee_id, year)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_employee_year (user_id, year)
   )
 `;
