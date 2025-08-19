@@ -15,5 +15,5 @@ export async function checkUser(request) {
 
   request.data = decoded;
 
-  return { decoded };
+  return { data: decoded };
 }

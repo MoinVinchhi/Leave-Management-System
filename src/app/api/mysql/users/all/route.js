@@ -11,9 +11,10 @@ export async function GET(request) {
   if (auth.error) {
     return NextResponse.json(auth.error, { status: auth.status });
   }
+  console.log(request.data);
   try {
     // Check if user is HR
-    if (request.data.role !== 'hr') {
+    if (request?.data?.role !== 'hr') {
       const response = {
         error: 'Forbidden: Only HR can access this resource',
         returnedStatus: 403

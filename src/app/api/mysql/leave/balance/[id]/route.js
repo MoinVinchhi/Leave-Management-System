@@ -4,10 +4,9 @@ import { GetDBSettings } from '@/sharedCode/common';
 
 const connectionParams = GetDBSettings();
 
-export async function GET(request) {
+export async function GET(request, { params }) {
   try {
-    const { searchParams } = new URL(request.url);
-    const user_id = searchParams.get('user_id');
+    const user_id = params.id;
 
     if (!user_id) {
       return NextResponse.json({ 
@@ -19,7 +18,7 @@ export async function GET(request) {
 
     // Check if user exists
     const [userCheck] = await connection.execute(
-      'SELECT id, first_name, last_name FROM users WHERE id = ?',
+      'SELECT id, first_name, last_name, role FROM users WHERE id = ?',
       [user_id]
     );
 
@@ -29,8 +28,6 @@ export async function GET(request) {
         error: 'Employee not found' 
       }, { status: 404 });
     }
-
-    // user_name: `${userCheck[0].first_name} ${userCheck[0].last_name}`
 
     const currentYear = new Date().getFullYear();
 
@@ -111,8 +108,8 @@ export async function GET(request) {
 
     // Format response
     const leaveBalance = {
-      user_id: parseInt(user_id),
-      user_name: userCheck[0].name,
+      employee_id: parseInt(user_id),
+      employee_name: `${userCheck[0].first_name} ${userCheck[0].last_name}`,
       year: currentYear,
       leave_types: {
         sick_leave: {
