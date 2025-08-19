@@ -224,7 +224,7 @@ export default function ApplyLeavePage() {
       </nav>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto py-8 px-4">
+      <div className="max-w-7xl mx-auto py-8 px-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Leave Application Form */}
           <div className="lg:col-span-2">
@@ -422,21 +422,6 @@ export default function ApplyLeavePage() {
                 </div>
               )}
             </div>
-
-            {/* Guidelines */}
-            <div className="bg-white shadow-md rounded-lg p-6 mt-6">
-              <h3 className="text-lg font-semibold text-black mb-4">
-                Leave Application Guidelines
-              </h3>
-              <ul className="text-sm text-gray-600 space-y-2">
-                <li>• Submit applications at least 2 days in advance</li>
-                <li>• Emergency leaves can be applied immediately</li>
-                <li>• Provide detailed reasons for your leave request</li>
-                <li>• Check your leave balance before applying</li>
-                <li>• Applications require HR approval</li>
-                <li>• You&epos;ll receive email notifications on status updates</li>
-              </ul>
-            </div>0
           </div>
         </div>
       </div>

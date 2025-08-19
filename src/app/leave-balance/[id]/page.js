@@ -131,7 +131,7 @@ export default function LeaveBalancePage() {
       </nav>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto py-8 px-4">
+      <div className="max-w-7xl mx-auto py-8 px-4">
         {/* Employee Info Card */}
         {employee && (
           <div className="bg-white shadow-md rounded-lg p-6 mb-6">
