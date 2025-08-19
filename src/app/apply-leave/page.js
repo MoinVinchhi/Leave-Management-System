@@ -434,9 +434,9 @@ export default function ApplyLeavePage() {
                 <li>• Provide detailed reasons for your leave request</li>
                 <li>• Check your leave balance before applying</li>
                 <li>• Applications require HR approval</li>
-                <li>• You'll receive email notifications on status updates</li>
+                <li>• You&epos;ll receive email notifications on status updates</li>
               </ul>
-            </div>
+            </div>0
           </div>
         </div>
       </div>
