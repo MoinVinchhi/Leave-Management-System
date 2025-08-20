@@ -30,6 +30,7 @@ export default function LoginPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for cross-origin requests
         body: JSON.stringify(formData),
       });
 

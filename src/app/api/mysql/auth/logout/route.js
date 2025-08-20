@@ -4,12 +4,12 @@ export async function POST(request) {
   try {
     const response = NextResponse.json({ message: 'Logged out successfully' });
     
-    // Clear the token cookie
+    // Clear the token cookie with same settings as login
     response.cookies.set('token', '', {
-      maxAge: 0,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax'
+      maxAge: 0, // immediately expire
+      httpOnly: true, // prevent JS access
+      secure: true, // needed for HTTPS
+      sameSite: 'None' // allow cross-site cookies
     });
     
     return response;

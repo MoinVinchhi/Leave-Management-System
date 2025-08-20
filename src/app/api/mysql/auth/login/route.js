@@ -57,10 +57,10 @@ export async function POST(request) {
     }, { status: 200 });
 
     response.cookies.set('token', token, {
-      maxAge: 60 * 60 * 1000,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax'
+      maxAge: 60 * 60 * 1000, // 1 hour
+      httpOnly: true, // prevent JS access
+      secure: true, // needed for HTTPS
+      sameSite: 'None' // allow cross-site cookies
     });
 
     return response;
