@@ -90,6 +90,27 @@ export default function AddUserPage() {
     }
   };
 
+  const handleLogout = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to logout?\n\nYou will be redirected to the login page and any unsaved changes will be lost."
+    );
+    
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await fetch('/api/mysql/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      alert('Logout failed. Please try again.');
+    }
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -123,7 +144,7 @@ export default function AddUserPage() {
                 </span>
               </span>
               <button
-                onClick={() => router.push('/login')}
+                onClick={handleLogout}
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
               >
                 Logout

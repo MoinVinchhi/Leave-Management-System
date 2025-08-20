@@ -95,6 +95,27 @@ export default function MyLeaveBalancePage() {
     return Object.values(balance.leave_types).reduce((sum, type) => sum + type.remaining, 0);
   };
 
+  const handleLogout = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to logout?\n\nYou will be redirected to the login page."
+    );
+    
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await fetch('/api/mysql/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      alert('Logout failed. Please try again.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -128,7 +149,7 @@ export default function MyLeaveBalancePage() {
                 </span>
               </span>
               <button
-                onClick={() => router.push('/login')}
+                onClick={handleLogout}
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
               >
                 Logout

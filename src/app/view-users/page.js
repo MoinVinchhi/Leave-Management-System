@@ -57,6 +57,14 @@ export default function ViewEmployeesPage() {
   }, [router]);
 
   const handleLogout = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to logout?\n\nYou will be redirected to the login page."
+    );
+    
+    if (!confirmed) {
+      return;
+    }
+
     try {
       await fetch('/api/mysql/auth/logout', {
         method: 'POST',
@@ -65,6 +73,7 @@ export default function ViewEmployeesPage() {
       router.push('/login');
     } catch (error) {
       console.error('Logout failed:', error);
+      alert('Logout failed. Please try again.');
     }
   };
 
