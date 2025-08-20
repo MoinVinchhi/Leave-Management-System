@@ -85,7 +85,23 @@ JWT_SECRET=your_super_secret_jwt_key_here
 node src/lib/database/init.js
 ```
 
-### **5. Run the Application**
+### **5. Add Dummy Data (Optional)**
+
+To populate your database with sample users, leave applications, and balances for testing:
+
+```bash
+node src/lib/database/seed.js
+```
+
+This will create:
+- **5 Sample Users** (3 employees + 2 HR personnel)
+- **Sample Leave Applications** with different statuses
+- **Leave Balances** for all employees
+- **Default Login Credentials**:
+  - **Employee**: `john.doe@company.com` / `password123`
+  - **HR**: `admin@company.com` / `password123`
+
+### **6. Run the Application**
 
 ```bash
 npm run dev
@@ -106,14 +122,14 @@ Leave-Management-System/
 │   │   │       ├── auth/          # Authentication APIs
 │   │   │       ├── employees/     # User management APIs
 │   │   │       └── leave/         # Leave management APIs
-│   │   ├── add-user/             # Add employee page
-│   │   ├── apply-leave/          # Apply leave page
-│   │   ├── dashboard/            # Main dashboard
-│   │   ├── login/                # Login page
+│   │   ├── add-user/              # Add employee page
+│   │   ├── apply-leave/           # Apply leave page
+│   │   ├── dashboard/             # Main dashboard
+│   │   ├── login/                 # Login page
 │   │   ├── manage-leave-requests/ # HR leave management
 │   │   ├── my-leave-applications/ # Employee leave history
-│   │   ├── my-leave-balance/     # Leave balance view
-│   │   └── view-users/           # User management page
+│   │   ├── my-leave-balance/      # Leave balance view
+│   │   └── view-users/            # User management page
 │   └── sharedCode/
 │       └── common.js             # Database configuration
 ├── .env                          # Environment variables
@@ -121,11 +137,28 @@ Leave-Management-System/
 └── README.md                     # This file
 ```
 
-## 🔐 Default Credentials
+## 🔐 User Management & Authentication
 
-After setting up the database, you can create users through the registration page or use the SQL command above to create an HR user.
+### **HR Privileges**
+- ✅ **Only HR personnel** can add new employees or other HR users to the system
+- ✅ **Employee Registration** is restricted - employees cannot self-register
+- ✅ **Role Assignment** is controlled by HR during user creation
 
-**Note**: Make sure to hash passwords using bcrypt before inserting into the database.
+### **Default Password System**
+When HR adds a new user, the system automatically generates a default password using the format:
+```
+<first_name>.<last_name>.<role>@123
+```
+
+**Examples:**
+- Employee: `john.doe.employee@123`
+- HR User: `sarah.wilson.hr@123`
+
+**Important**: Users should change their default password after first login for security.
+
+### **Login Credentials**
+- **Email**: As provided during user creation
+- **Password**: Default format or user-changed password
 
 ## 📚 API Documentation
 
@@ -143,7 +176,7 @@ After setting up the database, you can create users through the registration pag
 - `DELETE /api/mysql/employees/[id]` - Delete user (HR only)
 
 ### **Leave Management Endpoints**
-- `POST /api/mysql/leave/apply` - Apply for leave
+- `POST /api/mysql/leave/apply` - Apply for leave (only employee)
 - `GET /api/mysql/leave/my-applications` - Get current user's applications
 - `GET /api/mysql/leave/all` - Get all applications (HR only)
 - `PUT /api/mysql/leave/[id]/approve` - Approve leave (HR only)
@@ -190,7 +223,8 @@ After setting up the database, you can create users through the registration pag
 ### **User Role Assumptions**
 1. **HR Privileges**: HR users can manage all employees and leave requests
 2. **Employee Restrictions**: Employees can only view/manage their own data
-3. **Self-Service**: Employees register themselves (no admin approval required)
-4. **Single Role**: Users have only one role (either 'employee' or 'hr')
+3. **User Creation**: Only HR personnel can add new employees or HR users to the system
+4. **Default Passwords**: New users get auto-generated passwords in format `<first_name>.<last_name>.<role>@123`
+5. **Single Role**: Users have only one role (either 'employee' or 'hr')
 
 ---

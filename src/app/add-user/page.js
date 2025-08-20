@@ -249,7 +249,6 @@ export default function AddUserPage() {
               >
                 <option value="employee">Employee</option>
                 <option value="hr">HR</option>
-                <option value="admin">Admin</option>
               </select>
             </div>
 
@@ -288,7 +287,7 @@ export default function AddUserPage() {
               Example: <code className="bg-blue-100 px-1 rounded">John.Doe.employee@123</code>
             </p>
           </div>
-        </div>
+        </div>hr
       </div>
     </div>
   );
