@@ -15,8 +15,11 @@ export async function POST(request) {
     if (!email || !password) {
       throw new Error('Inavalid Credentials');
     }
+    console.log('1', connectionParams);
     
     const connection = await mysql.createConnection(connectionParams);
+
+    console.log('2', connection);
 
     // Find user by email
     const [users] = await connection.execute(
@@ -25,6 +28,8 @@ export async function POST(request) {
     );
 
     await connection.end();
+
+    console.log(users);
 
     if (users.length === 0)
       throw new Error('Invalid Credentials');
@@ -65,6 +70,7 @@ export async function POST(request) {
 
     return response;
   } catch (err) {
+    console.log('error', err);
     console.log("Error: Login API - " + err.message);
     return NextResponse.json(
       { error: err.message },
