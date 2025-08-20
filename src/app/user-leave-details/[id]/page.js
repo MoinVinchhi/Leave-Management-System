@@ -125,23 +125,24 @@ export default function UserLeaveDetailsPage() {
               >
                 <MoveLeft className='inline' /> Back to Users
               </button>
-              <h1 className="text-xl font-semibold">Employee Leave Details</h1>
+              <h1 className="text-xl font-semibold">User Leave Details</h1>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">
-                Welcome,
-                <span className='font-bold'> 
-                {" " + user?.first_name?.charAt(0).toUpperCase() + user?.first_name?.slice(1).toLowerCase()} 
-                {user?.last_name?.charAt(0).toUpperCase() + user?.last_name?.slice(1).toLowerCase() + " "} 
-                ({user?.role?.toUpperCase()})
-                </span>
-              </span>
+            <div className="relative inline-block text-left group mt-3">
               <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-md transition"
               >
-                Logout
+                {user?.first_name?.charAt(0).toUpperCase() +
+                  user?.first_name?.slice(1).toLowerCase()}
               </button>
+
+              <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition">
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:cursor-pointer hover:bg-red-100 rounded-md"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -158,7 +159,7 @@ export default function UserLeaveDetailsPage() {
 
         {userData && (
           <>
-            {/* Employee Info Card */}
+            {/* User Info Card */}
             <div className="bg-white shadow-md rounded-lg p-6 mb-6">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
@@ -331,7 +332,7 @@ export default function UserLeaveDetailsPage() {
                     <h3 className="mt-2 text-sm font-medium text-gray-900">No leave applications</h3>
                     <p className="mt-1 text-sm text-gray-500">
                       {activeTab === 'all' 
-                        ? 'No leave applications found for this employee.' 
+                        ? 'No leave applications found for this user.' 
                         : `No ${activeTab} leave applications found.`
                       }
                     </p>

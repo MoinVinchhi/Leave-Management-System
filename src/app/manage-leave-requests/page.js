@@ -174,21 +174,22 @@ export default function ManageLeaveRequestsPage() {
               </button>
               <h1 className="text-xl font-semibold">Manage Leave Requests</h1>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">
-                Welcome,
-                <span className='font-bold'> 
-                {" " + user?.first_name?.charAt(0).toUpperCase() + user?.first_name?.slice(1).toLowerCase()} 
-                {user?.last_name?.charAt(0).toUpperCase() + user?.last_name?.slice(1).toLowerCase() + " "} 
-                ({user?.role?.toUpperCase()})
-                </span>
-              </span>
+            <div className="relative inline-block text-left group mt-3">
               <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-md transition"
               >
-                Logout
+                {user?.first_name?.charAt(0).toUpperCase() +
+                  user?.first_name?.slice(1).toLowerCase()}
               </button>
+
+              <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition">
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:cursor-pointer hover:bg-red-100 rounded-md"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -229,7 +230,7 @@ export default function ManageLeaveRequestsPage() {
               Leave Requests
             </h3>
             <p className="mt-1 max-w-2xl text-sm text-gray-500">
-              Manage and process employee leave requests
+              Manage and process user leave requests
             </p>
           </div>
           
@@ -250,8 +251,8 @@ export default function ManageLeaveRequestsPage() {
             <ul className="divide-y divide-gray-200">
               {filteredRequests.map((request) => (
                 <li key={request.id} className="px-4 py-4 sm:px-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <p className="text-sm font-medium text-blue-600 truncate">
                           {request.employee_name}
@@ -306,7 +307,7 @@ export default function ManageLeaveRequestsPage() {
                         </div>
                       )}
                     </div>
-                    <div className="ml-4 flex-shrink-0">
+                    <div className="ml-6 flex-shrink-0 self-start">
                       {request.status === 'pending' && (
                         <button
                           onClick={() => openActionModal(request)}

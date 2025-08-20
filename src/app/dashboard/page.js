@@ -70,21 +70,22 @@ export default function Dashboard() {
             <div className="flex items-center">
               <h1 className="text-xl font-semibold">Leave Management System</h1>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">
-                Welcome,
-                <span className='font-bold'> 
-                {" " + user?.first_name?.charAt(0).toUpperCase() + user?.first_name?.slice(1).toLowerCase()} 
-                {user?.last_name?.charAt(0).toUpperCase() + user?.last_name?.slice(1).toLowerCase() + " "} 
-                ({user?.role?.toUpperCase()})
-                </span>
-              </span>
+            <div className="relative inline-block text-left group mt-3">
               <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-md transition"
               >
-                Logout
+                {user?.first_name?.charAt(0).toUpperCase() +
+                  user?.first_name?.slice(1).toLowerCase()}
               </button>
+
+              <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition">
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:cursor-pointer hover:bg-red-100 rounded-md"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -98,13 +99,13 @@ export default function Dashboard() {
             {user?.role === 'hr' && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="bg-white p-6 rounded-lg shadow">
-                  <h3 className="text-lg font-medium mb-2">Add Employee</h3>
-                  <p className="text-black mb-4">Add new employees to the system</p>
+                  <h3 className="text-lg font-medium mb-2">Add User</h3>
+                  <p className="text-black mb-4">Add new users to the system</p>
                   <button 
                     onClick={() => router.push('/add-user')}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
                   >
-                    Add Employee
+                    Add User
                   </button>
                 </div>
                 

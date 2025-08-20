@@ -4,16 +4,16 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MoveLeft } from 'lucide-react';
 
-export default function ViewEmployeesPage() {
-  const [employees, setEmployees] = useState([]);
+export default function ViewUsersPage() {
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [user, setUser] = useState(null);
   const router = useRouter();
 
-  // Check if user is HR and fetch employees
+  // Check if user is HR and fetch users
   useEffect(() => {
-    const checkAuthAndFetchEmployees = async () => {
+    const checkAuthAndFetchUsers = async () => {
       try {
         // Check authentication
         const authResponse = await fetch('/api/mysql/auth/verify', {
@@ -29,18 +29,18 @@ export default function ViewEmployeesPage() {
           }
           setUser(authData.user);
 
-          // Fetch all employees
-          const employeesResponse = await fetch('/api/mysql/users/all', {
+          // Fetch all users
+          const usersResponse = await fetch('/api/mysql/users/all', {
             method: 'GET',
             credentials: 'include'
           });
 
-          if (employeesResponse.ok) {
-            const employeesData = await employeesResponse.json();
-            setEmployees(employeesData.results || []);
+          if (usersResponse.ok) {
+            const usersData = await usersResponse.json();
+            setUsers(usersData.results || []);
           } else {
-            const errorData = await employeesResponse.json();
-            setError(errorData.error || 'Failed to fetch employees');
+            const errorData = await usersResponse.json();
+            setError(errorData.error || 'Failed to fetch users');
           }
         } else {
           router.push('/login');
@@ -53,7 +53,7 @@ export default function ViewEmployeesPage() {
       }
     };
 
-    checkAuthAndFetchEmployees();
+    checkAuthAndFetchUsers();
   }, [router]);
 
   const handleLogout = async () => {
@@ -92,8 +92,8 @@ export default function ViewEmployeesPage() {
         return 'bg-purple-100 text-purple-800';
       case 'admin':
         return 'bg-red-100 text-red-800';
-      case 'employee':
-        return 'bg-blue-100 text-blue-800';
+      case 'user':
+        return 'bg-green-100 text-green-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -102,7 +102,7 @@ export default function ViewEmployeesPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Loading employees...</div>
+        <div className="text-xl">Loading users...</div>
       </div>
     );
   }
@@ -120,23 +120,24 @@ export default function ViewEmployeesPage() {
               >
                 <MoveLeft className='inline' /> Back to Dashboard
               </button>
-              <h1 className="text-xl font-semibold">All Employees</h1>
+              <h1 className="text-xl font-semibold">All Users</h1>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">
-                Welcome,
-                <span className='font-bold'> 
-                {" " + user?.first_name?.charAt(0).toUpperCase() + user?.first_name?.slice(1).toLowerCase()} 
-                {user?.last_name?.charAt(0).toUpperCase() + user?.last_name?.slice(1).toLowerCase() + " "} 
-                ({user?.role?.toUpperCase()})
-                </span>
-              </span>
+            <div className="relative inline-block text-left group mt-3">
               <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-md transition"
               >
-                Logout
+                {user?.first_name?.charAt(0).toUpperCase() +
+                  user?.first_name?.slice(1).toLowerCase()}
               </button>
+
+              <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition">
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:cursor-pointer hover:bg-red-100 rounded-md"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -148,17 +149,19 @@ export default function ViewEmployeesPage() {
           {/* Header */}
           <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
             <div>
-              <h2 className="text-xl font-semibold text-black">Employee Directory</h2>
-              <p className="text-sm text-black mt-1">
-                Total Employees: {employees.length}
+                            <h2 className="text-xl font-semibold text-black">User Directory</h2>
+              <p className="text-sm text-gray-600 mt-1">
+                Total Users: {users.length}
               </p>
             </div>
-            <button
-              onClick={() => router.push('/add-user')}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-            >
-              Add New Employee
-            </button>
+            <div>
+              <button
+                onClick={() => router.push('/add-user')}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+              >
+              Add New User
+              </button>
+            </div>
           </div>
 
           {/* Error Message */}
@@ -169,7 +172,7 @@ export default function ViewEmployeesPage() {
           )}
 
           {/* Table */}
-          {employees.length > 0 ? (
+          {users.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -198,42 +201,42 @@ export default function ViewEmployeesPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {employees.map((employee) => (
-                    <tr key={employee.id} className="hover:bg-gray-50">
+                  {users.map((user) => (
+                    <tr key={user.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        #{employee.id}
+                        #{user.id}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-black">
-                          {employee.first_name} {employee.last_name}
+                          {user.first_name} {user.last_name}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-black">{employee.email}</div>
+                        <div className="text-sm text-black">{user.email}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-black">
-                          {employee.department || 'N/A'}
+                          {user.department || 'N/A'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(employee.role)}`}>
-                          {employee.role}
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(user.role)}`}>
+                          {user.role}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {formatDate(employee.join_date)}
+                        {formatDate(user.join_date)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
                           <button
-                            onClick={() => router.push(`/leave-balance/${employee.id}`)}
+                            onClick={() => router.push(`/leave-balance/${user.id}`)}
                             className="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded text-xs"
                           >
                             View Balance
                           </button>
                           <button
-                            onClick={() => router.push(`/user-leave-details/${employee.id}`)}
+                            onClick={() => router.push(`/user-leave-details/${user.id}`)}
                             className="text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100 px-3 py-1 rounded text-xs"
                           >
                             Leave Details
@@ -251,16 +254,16 @@ export default function ViewEmployeesPage() {
                 <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-2.197a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No employees found</h3>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No users found</h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  Get started by adding your first employee.
+                  Get started by adding your first user.
                 </p>
                 <div className="mt-6">
                   <button
                     onClick={() => router.push('/add-user')}
                     className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
                   >
-                    Add Employee
+                    Add User
                   </button>
                 </div>
               </div>
@@ -269,22 +272,22 @@ export default function ViewEmployeesPage() {
         </div>
 
         {/* Summary Cards */}
-        {employees.length > 0 && (
+        {users.length > 0 && (
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-lg font-medium text-gray-900">Total Employees</h3>
-              <p className="text-3xl font-bold text-blue-600 mt-2">{employees.length}</p>
+              <h3 className="text-lg font-medium text-gray-900">Total Users</h3>
+              <p className="text-3xl font-bold text-blue-600 mt-2">{users.length}</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-lg font-medium text-gray-900">Departments</h3>
               <p className="text-3xl font-bold text-green-600 mt-2">
-                {new Set(employees.filter(emp => emp.department).map(emp => emp.department)).size}
+                {new Set(users.filter(usr => usr.department).map(usr => usr.department)).size}
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-lg font-medium text-gray-900">HR Users</h3>
               <p className="text-3xl font-bold text-purple-600 mt-2">
-                {employees.filter(emp => emp.role === 'hr').length}
+                {users.filter(usr => usr.role === 'hr').length}
               </p>
             </div>
           </div>

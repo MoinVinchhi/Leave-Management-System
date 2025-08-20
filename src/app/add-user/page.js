@@ -17,6 +17,7 @@ export default function AddUserPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [user, setUser] = useState(null);
+  const [open, setOpen] = useState(false);
   const router = useRouter();
 
   // Check if user is HR
@@ -111,6 +112,8 @@ export default function AddUserPage() {
     }
   };
 
+  const toggleMenu = () => setOpen(!open);
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -134,28 +137,29 @@ export default function AddUserPage() {
               </button>
               <h1 className="text-xl font-semibold">Add New User</h1>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">
-                Welcome,
-                <span className='font-bold'> 
-                {" " + user?.first_name?.charAt(0).toUpperCase() + user?.first_name?.slice(1).toLowerCase()} 
-                {user?.last_name?.charAt(0).toUpperCase() + user?.last_name?.slice(1).toLowerCase() + " "} 
-                ({user?.role?.toUpperCase()})
-                </span>
-              </span>
+            <div className="relative inline-block text-left group mt-3">
               <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-md transition"
               >
-                Logout
+                {user?.first_name?.charAt(0).toUpperCase() +
+                  user?.first_name?.slice(1).toLowerCase()}
               </button>
+
+              <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition">
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:cursor-pointer hover:bg-red-100 rounded-md"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <div className="max-w-2xl mx-auto py-8 px-4">
+      <div className="max-w-3xl mx-auto py-8 px-4">
         <div className="bg-white shadow-md rounded-lg p-6">
           <h1 className="text-2xl font-bold text-black mb-6">Add New User</h1>
           
@@ -308,7 +312,7 @@ export default function AddUserPage() {
               Example: <code className="bg-blue-100 px-1 rounded">John.Doe.employee@123</code>
             </p>
           </div>
-        </div>hr
+        </div>
       </div>
     </div>
   );

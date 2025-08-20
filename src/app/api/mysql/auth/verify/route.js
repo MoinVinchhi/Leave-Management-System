@@ -17,7 +17,8 @@ export async function GET(request) {
         email: decoded.email,
         role: decoded.role,
         first_name: decoded.first_name,
-        last_name: decoded.last_name
+        last_name: decoded.last_name,
+        join_date: decoded.join_date
       } 
     });
 

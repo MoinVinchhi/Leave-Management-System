@@ -6,13 +6,13 @@ import { MoveLeft } from 'lucide-react';
 
 export default function LeaveBalancePage() {
   const [balance, setBalance] = useState(null);
-  const [employee, setEmployee] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [user, setUser] = useState(null);
   const router = useRouter();
   const params = useParams();
-  const employeeId = params.id;
+  const userId = params.id;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +32,7 @@ export default function LeaveBalancePage() {
           setUser(authData.user);
 
           // Fetch leave balance using dynamic route parameter
-          const balanceResponse = await fetch(`/api/mysql/leave/balance/${employeeId}`, {
+          const balanceResponse = await fetch(`/api/mysql/leave/balance/${userId}`, {
             method: 'GET',
             credentials: 'include'
           });
@@ -40,7 +40,7 @@ export default function LeaveBalancePage() {
           if (balanceResponse.ok) {
             const balanceData = await balanceResponse.json();
             setBalance(balanceData);
-            setEmployee({
+            setSelectedUser({
               id: balanceData.employee_id,
               name: balanceData.employee_name
             });
@@ -59,10 +59,10 @@ export default function LeaveBalancePage() {
       }
     };
 
-    if (employeeId) {
+    if (userId) {
       fetchData();
     }
-  }, [employeeId, router]);
+  }, [userId, router]);
 
   const handleLogout = async () => {
     try {
@@ -106,7 +106,7 @@ export default function LeaveBalancePage() {
                 onClick={() => router.push('/view-users')}
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
-                <MoveLeft className='inline' /> Back to Employees
+                <MoveLeft className='inline' /> Back to Users
               </button>
               <h1 className="text-xl font-semibold">Leave Balance</h1>
             </div>
@@ -132,13 +132,13 @@ export default function LeaveBalancePage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto py-8 px-4">
-        {/* Employee Info Card */}
-        {employee && (
+        {/* User Info Card */}
+        {selectedUser && (
           <div className="bg-white shadow-md rounded-lg p-6 mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              {employee.name}
+              {selectedUser.name}
             </h2>
-            <p className="text-gray-600">Employee ID: #{employee.id}</p>
+            <p className="text-gray-600">User ID: #{selectedUser.id}</p>
             <p className="text-gray-600">Leave Balance for Year: {balance?.year}</p>
           </div>
         )}
@@ -242,7 +242,7 @@ export default function LeaveBalancePage() {
               </svg>
               <h3 className="mt-2 text-sm font-medium text-gray-900">No leave balance data</h3>
               <p className="mt-1 text-sm text-gray-500">
-                No leave balance information is available for this employee.
+                No leave balance information is available for this user.
               </p>
             </div>
           </div>

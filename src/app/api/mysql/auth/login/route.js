@@ -23,7 +23,7 @@ export async function POST(request) {
 
     // Find user by email
     const [users] = await connection.execute(
-      'SELECT id, first_name, last_name, email, password, role FROM users WHERE email = ?',
+      'SELECT id, first_name, last_name, email, password, role, join_date FROM users WHERE email = ?',
       [email]
     );
 
@@ -43,7 +43,14 @@ export async function POST(request) {
 
     // Create JWT token
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role, first_name: user.first_name, last_name: user.last_name },
+      { 
+        id: user.id, 
+        email: user.email, 
+        role: user.role, 
+        first_name: user.first_name, 
+        last_name: user.last_name,
+        join_date: user.join_date
+      },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );

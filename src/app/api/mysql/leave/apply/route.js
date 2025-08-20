@@ -36,9 +36,9 @@ export async function POST(request) {
 
     const connection = await mysql.createConnection(connectionParams);
 
-    // Check if user exists
+    // Check if user exists and get their join date
     const [userCheck] = await connection.execute(
-      'SELECT id FROM users WHERE id = ?',
+      'SELECT id, join_date FROM users WHERE id = ?',
       [request.data.id]
     );
 
@@ -47,6 +47,16 @@ export async function POST(request) {
       return NextResponse.json({ 
         error: 'User not found' 
       }, { status: 404 });
+    }
+
+    const userJoinDate = new Date(userCheck[0].join_date);
+    
+    // Check if leave start date is before join date
+    if (startDate < userJoinDate) {
+      await connection.end();
+      return NextResponse.json({ 
+        error: `Cannot apply for leave before your joining date. Your joining date is ${userJoinDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}.` 
+      }, { status: 400 });
     }
 
     // Insert leave application

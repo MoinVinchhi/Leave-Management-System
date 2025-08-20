@@ -3,16 +3,16 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function ViewEmployeesPage() {
-  const [employees, setEmployees] = useState([]);
+export default function ViewUsersPage() {
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [user, setUser] = useState(null);
   const router = useRouter();
 
-  // Check if user is HR and fetch employees
+  // Check if user is HR and fetch users
   useEffect(() => {
-    const checkAuthAndFetchEmployees = async () => {
+    const checkAuthAndFetchUsers = async () => {
       try {
         // Check authentication
         const authResponse = await fetch('/api/mysql/auth/verify', {
@@ -28,18 +28,18 @@ export default function ViewEmployeesPage() {
           }
           setUser(authData.user);
 
-          // Fetch all employees
-          const employeesResponse = await fetch('/api/mysql/users/all', {
+          // Fetch all users
+          const usersResponse = await fetch('/api/mysql/users/all', {
             method: 'GET',
             credentials: 'include'
           });
 
-          if (employeesResponse.ok) {
-            const employeesData = await employeesResponse.json();
-            setEmployees(employeesData.results || []);
+          if (usersResponse.ok) {
+            const usersData = await usersResponse.json();
+            setUsers(usersData.results || []);
           } else {
-            const errorData = await employeesResponse.json();
-            setError(errorData.error || 'Failed to fetch employees');
+            const errorData = await usersResponse.json();
+            setError(errorData.error || 'Failed to fetch users');
           }
         } else {
           router.push('/login');
@@ -52,7 +52,7 @@ export default function ViewEmployeesPage() {
       }
     };
 
-    checkAuthAndFetchEmployees();
+    checkAuthAndFetchUsers();
   }, [router]);
 
   const handleLogout = async () => {
@@ -84,6 +84,8 @@ export default function ViewEmployeesPage() {
         return 'bg-red-100 text-red-800';
       case 'employee':
         return 'bg-blue-100 text-blue-800';
+      case 'user':
+        return 'bg-blue-100 text-blue-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -92,7 +94,7 @@ export default function ViewEmployeesPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Loading employees...</div>
+        <div className="text-xl">Loading users...</div>
       </div>
     );
   }
@@ -110,23 +112,24 @@ export default function ViewEmployeesPage() {
               >
                 ← Back to Dashboard
               </button>
-              <h1 className="text-xl font-semibold">All Employees</h1>
+              <h1 className="text-xl font-semibold">All Users</h1>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">
-                Welcome,
-                <span className='font-bold'> 
-                {" " + user?.first_name?.charAt(0).toUpperCase() + user?.first_name?.slice(1).toLowerCase()} 
-                {user?.last_name?.charAt(0).toUpperCase() + user?.last_name?.slice(1).toLowerCase() + " "} 
-                ({user?.role?.toUpperCase()})
-                </span>
-              </span>
+            <div className="relative inline-block text-left group mt-3">
               <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-md transition"
               >
-                Logout
+                {user?.first_name?.charAt(0).toUpperCase() +
+                  user?.first_name?.slice(1).toLowerCase()}
               </button>
+
+              <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition">
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:cursor-pointer hover:bg-red-100 rounded-md"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -138,16 +141,16 @@ export default function ViewEmployeesPage() {
           {/* Header */}
           <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">Employee Directory</h2>
+              <h2 className="text-xl font-semibold text-gray-900">User Directory</h2>
               <p className="text-sm text-gray-600 mt-1">
-                Total Employees: {employees.length}
+                Total Users: {users.length}
               </p>
             </div>
             <button
               onClick={() => router.push('/add-user')}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
             >
-              Add New Employee
+              Add New User
             </button>
           </div>
 
@@ -159,7 +162,7 @@ export default function ViewEmployeesPage() {
           )}
 
           {/* Table */}
-          {employees.length > 0 ? (
+          {users.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -188,31 +191,31 @@ export default function ViewEmployeesPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {employees.map((employee) => (
-                    <tr key={employee.id} className="hover:bg-gray-50">
+                  {users.map((currentUser) => (
+                    <tr key={currentUser.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        #{employee.id}
+                        #{currentUser.id}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
-                          {employee.first_name} {employee.last_name}
+                          {currentUser.first_name} {currentUser.last_name}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{employee.email}</div>
+                        <div className="text-sm text-gray-900">{currentUser.email}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {employee.department || 'N/A'}
+                          {currentUser.department || 'N/A'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(employee.role)}`}>
-                          {employee.role}
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(currentUser.role)}`}>
+                          {currentUser.role}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {formatDate(employee.join_date)}
+                        {formatDate(currentUser.join_date)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
