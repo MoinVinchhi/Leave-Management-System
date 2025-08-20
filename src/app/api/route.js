@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server'
-
+// import { GetDBSettings } from '@/sharedCode/common';
+// const connectionParams = GetDBSettings();
 export async function GET(request) {
   // this is going to be my JSON response
 

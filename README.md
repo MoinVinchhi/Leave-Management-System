@@ -41,7 +41,7 @@ Before setting up the project, ensure you have:
 
 - **Node.js** (v18.0 or higher)
 - **npm** or **yarn** package manager
-- **MySQL** (v8.0 or higher)
+- **MySQL** (v5.6 or higher) - Compatible with older MySQL versions
 - **Git** for version control
 
 ## ⚙️ Setup Instructions
