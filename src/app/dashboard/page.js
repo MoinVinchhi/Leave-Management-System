@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { trackAuth, trackPageView } from '@/lib/analytics';
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -20,6 +21,11 @@ export default function Dashboard() {
         if (response.ok) {
           const data = await response.json();
           setUser(data.user);
+          // Track dashboard access
+          trackPageView('dashboard', { 
+            role: data.user.role,
+            user_id: data.user.id 
+          });
         } else {
           router.push('/login');
         }
@@ -46,6 +52,11 @@ export default function Dashboard() {
       await fetch('/api/mysql/auth/logout', {
         method: 'POST',
         credentials: 'include'
+      });
+      // Track logout
+      trackAuth('logout', { 
+        role: user?.role,
+        user_id: user?.id 
       });
       router.push('/login');
     } catch (error) {

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MoveLeft } from 'lucide-react';
+import { trackUserManagement, trackPageView } from '@/lib/analytics';
 
 export default function AddUserPage() {
   const [formData, setFormData] = useState({
@@ -35,6 +36,12 @@ export default function AddUserPage() {
             router.push('/dashboard');
           }
           setUser(data.user);
+          
+          // Track page view
+          trackPageView('add_user', { 
+            role: data.user.role,
+            user_id: data.user.id 
+          });
         } else {
           router.push('/login');
         }
@@ -72,6 +79,13 @@ export default function AddUserPage() {
       const data = await response.json();
 
       if (response.ok) {
+        // Track successful user creation
+        trackUserManagement('add_user', {
+          created_user_role: formData.role,
+          created_user_department: formData.department,
+          hr_user_id: user?.id
+        });
+        
         setSuccess(`User created successfully! Password: ${formData.first_name}.${formData.last_name}.${formData.role}@123`);
         setFormData({
           first_name: '',

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { trackAuth, trackPageView } from '@/lib/analytics';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,11 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+
+  // Track page view
+  useEffect(() => {
+    trackPageView('login');
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -37,9 +43,19 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
+        // Track successful login
+        trackAuth('login', { 
+          email: formData.email,
+          role: data.user?.role 
+        });
         // Login successful, redirect to dashboard
         router.push('/dashboard');
       } else {
+        // Track failed login attempt
+        trackAuth('login_failed', { 
+          email: formData.email,
+          error: data.error 
+        });
         setError(data.error || 'Login failed');
       }
     } catch (err) {

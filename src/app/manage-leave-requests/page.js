@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { MoveLeft } from 'lucide-react'
+import { trackLeaveAction, trackPageView } from '@/lib/analytics'
 
 export default function ManageLeaveRequestsPage() {
   const [leaveRequests, setLeaveRequests] = useState([]);
@@ -38,6 +39,12 @@ export default function ManageLeaveRequestsPage() {
           return;
         }
         setUser(authData.user);
+
+        // Track page view
+        trackPageView('manage_leave_requests', { 
+          role: authData.user.role,
+          user_id: authData.user.id 
+        });
 
         // Fetch leave requests
         const requestsResponse = await fetch('/api/mysql/leave/manage', {
@@ -110,6 +117,15 @@ export default function ManageLeaveRequestsPage() {
 
       if (response.ok) {
         const result = await response.json();
+        
+        // Track leave action
+        trackLeaveAction(action, {
+          leave_id: actionModal.request.id,
+          leave_type: actionModal.request.leave_type,
+          total_days: actionModal.request.total_days,
+          hr_user_id: user.id,
+          applicant_id: actionModal.request.employee_id || actionModal.request.user_id
+        });
         
         // Update the local state
         setLeaveRequests(prev => prev.map(req => 

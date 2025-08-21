@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MoveLeft, Calendar, Clock, FileText } from 'lucide-react';
+import { trackLeaveAction, trackPageView } from '@/lib/analytics';
 
 export default function ApplyLeavePage() {
   const [formData, setFormData] = useState({
@@ -51,6 +52,12 @@ export default function ApplyLeavePage() {
         if (response.ok) {
           const data = await response.json();
           setUser(data.user);
+          
+          // Track page view
+          trackPageView('apply_leave', { 
+            role: data.user.role,
+            user_id: data.user.id 
+          });
           
           // Fetch user's leave balance
           const balanceResponse = await fetch('/api/mysql/leave/my-balance', {
@@ -170,6 +177,14 @@ export default function ApplyLeavePage() {
       const data = await response.json();
 
       if (response.ok) {
+        // Track successful leave application
+        trackLeaveAction('apply', {
+          leave_type: formData.leave_type,
+          total_days: totalDays,
+          user_id: user?.id,
+          application_id: data.application_id
+        });
+        
         setSuccess(`Leave application submitted successfully! Application ID: ${data.application_id}. Your request is now pending approval.`);
         setFormData({
           leave_type: '',
